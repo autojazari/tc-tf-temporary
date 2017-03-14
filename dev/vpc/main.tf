@@ -1,9 +1,3 @@
-provider "aws" {
-	access_key = "${var.aws_access_key}"
-	secret_key = "${var.aws_secret_key}"
-	region = "us-east-1"
-}
-
 # VPC
 resource "aws_vpc" "default" {
 	cidr_block = "172.16.0.0/12"
@@ -100,38 +94,4 @@ resource "aws_route_table_association" "us-east-1d-private" {
 resource "aws_route_table_association" "us-east-1e-private" {
 	subnet_id = "${aws_subnet.us-east-1e-private.id}"
 	route_table_id = "${aws_route_table.us-east-1-private.id}"
-}
-
-resource "aws_placement_group" "tap_n" {
-  name     = "tap-n-placement_group"
-  strategy = "cluster"
-}
-
-resource "aws_launch_configuration" "tap_n" {
-    name_prefix = "tap-n-"
-    image_id = "${data.aws_ami.ubuntu.id}"
-    instance_type = "t2.micro"
-
-    lifecycle {
-      create_before_destroy = true
-    }
-}
-
-resource "aws_autoscaling_group" "tap_n" {
-  availability_zones        = ["us-east-1b", "us-east-1d", "us-east-1e"]
-  name                      = "tap-n-autoscaling-group"
-  max_size                  = 5
-  min_size                  = 2
-  health_check_grace_period = 300
-  health_check_type         = "ELB"
-  desired_capacity          = 4
-  force_delete              = true
-  placement_group           = "${aws_placement_group.tap_n.id}"
-  launch_configuration      = "${aws_launch_configuration.tap_n.name}"
-
-  tag {
-    key                 = "name"
-    value               = "tap-01"
-    propagate_at_launch = true
-  }
 }
