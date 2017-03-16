@@ -7,7 +7,7 @@ resource "aws_placement_group" "tap_n" {
 
 resource "aws_launch_configuration" "tap_n" {
     name_prefix = "tap-n-"
-    image_id = "${data.aws_ami.ubuntu.id}"
+    image_id = "${lookup(var.aws_ubuntu_ami, var.region)}"
     instance_type = "t2.micro"
 
     lifecycle {
@@ -16,7 +16,7 @@ resource "aws_launch_configuration" "tap_n" {
 }
 
 resource "aws_autoscaling_group" "tap_n" {
-  availability_zones        = ["us-east-1b", "us-east-1d", "us-east-1e"]
+  availability_zones        = "${var.asg_availability_zones[var.region]}"
   name                      = "tap-n-autoscaling-group"
   max_size                  = 5
   min_size                  = 2
@@ -41,7 +41,7 @@ resource "aws_placement_group" "nap_n" {
 
 resource "aws_launch_configuration" "nap_n" {
     name_prefix = "nap-n-"
-    image_id = "${data.aws_ami.ubuntu.id}"
+    image_id = "${lookup(var.aws_ubuntu_ami, var.region)}"
     instance_type = "t2.micro"
 
     lifecycle {
@@ -50,7 +50,7 @@ resource "aws_launch_configuration" "nap_n" {
 }
 
 resource "aws_autoscaling_group" "nap_n" {
-  availability_zones        = ["us-east-1b", "us-east-1d", "us-east-1e"]
+  availability_zones        = "${var.asg_availability_zones[var.region]}"
   name                      = "nap-n-autoscaling-group"
   max_size                  = 5
   min_size                  = 2
@@ -75,7 +75,7 @@ resource "aws_placement_group" "ldr_n" {
 
 resource "aws_launch_configuration" "ldr_n" {
     name_prefix = "ldr-n-"
-    image_id = "${data.aws_ami.ubuntu.id}"
+    image_id = "${lookup(var.aws_ubuntu_ami, var.region)}"
     instance_type = "t2.micro"
 
     lifecycle {
@@ -84,7 +84,7 @@ resource "aws_launch_configuration" "ldr_n" {
 }
 
 resource "aws_autoscaling_group" "ldr_n" {
-  availability_zones        = ["us-east-1b", "us-east-1d", "us-east-1e"]
+  availability_zones        = "${var.asg_availability_zones[var.region]}"
   name                      = "ldr-n-autoscaling-group"
   max_size                  = 5
   min_size                  = 2
