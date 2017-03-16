@@ -1,7 +1,7 @@
 # S3 buckets
 
 resource "aws_s3_bucket" "elb_access_logs" {
-    bucket = "elb-access-logs.sandbox.measuredprogress.org"
+    bucket = "${var.s3_elb_access_logs_bucket}"
     acl = "private"
 
     tags {

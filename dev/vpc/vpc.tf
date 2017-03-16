@@ -101,11 +101,11 @@ resource "aws_route_table_association" "private3" {
 resource "aws_security_group" "allow_https" {
   name = "allow_https"
   description = "Allow inbound https traffic"
-
+  vpc_id = "${aws_vpc.dev.id}"
   ingress {
       from_port = 443
       to_port = 443
-      protocol = "https"
+      protocol = "tcp"
       cidr_blocks = ["0.0.0.0/0"]
   }
 

@@ -1,7 +1,10 @@
-# output "private_subnet_ids" {
-#   value = [
-#     "${aws_subnet.public-1a.id}", 
-#     "${aws_subnet.public-1b.id}",
-#     "${aws_subnet.public-1c.id}"
-#   ]
-# }
+output "private_subnet_ids" {
+  value = [
+    "${aws_subnet.private1.id}", 
+    "${aws_subnet.private2.id}",
+    "${aws_subnet.private3.id}"
+  ]
+}
+output "sg_allow_https" {
+  value = "${aws_security_group.allow_https.id}"
+}
