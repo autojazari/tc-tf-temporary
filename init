@@ -1,4 +1,4 @@
-init#!/bin/bash -e
+#!/bin/bash +e
  
 PROJECT="$(basename `pwd`)"
 BUCKET="terraform.autojazari.mp.org"
@@ -21,15 +21,32 @@ init() {
     -backend-config="region=us-east-1"
  
 }
- 
-while getopts "i" opt; do
-  case "$opt" in
-    i)
-      IGNORE_INIT="true"
-      ;;
-  esac
-done
- 
-shift $((OPTIND-1))
- 
+
+remove_states() {
+  if [ -a ".terraform/terraform.tfstate" ]
+    then
+      rm -rf .terraform/terraform.tfstate
+  fi
+
+  if [ -a "status" ]
+    then
+      rm -rf status
+  fi
+
+}
+
+remove_states
 init
+
+for comp in "${Components[@]}"
+do
+  cd $PROJECT/$EnvStack/$comp
+  terraform get
+  terraform plan -out=plan.out -detailed-exitcode;
+  if [ $? -eq 0 ]
+    then
+      terraform apply plan.out;
+  else
+    exit ;
+  fi
+done
